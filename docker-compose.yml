@@ -1,0 +1,36 @@
+version: '3.8'
+services:
+  portal:
+    image: jaosalles/portal
+    ports: 
+      - "3000:3000"
+    build:
+      context: ./next
+      dockerfile: ./next/build/docker/Dockerfile.dev
+    restart: no
+    volumes:
+      - ./next:/app
+    networks:
+      estudo_network:
+        ipv4_address:  255.172.172.2
+  auth:
+    image: jaosalles/auth
+    ports: 
+      - "4000:4000"
+    build:
+      context: ./auth
+      dockerfile: ./auth/build/docker/Dockerfile.dev
+    restart: no
+    volumes:
+      - ./auth:/opt/app
+    networks:
+      estudo_network:
+        ipv4_address:  255.172.172.3
+
+networks:
+  estudo_network:
+    ipam:
+      driver: default
+      config:
+        - subnet: 255.172.172.0/24
+          gateway: 255.172.172.1
